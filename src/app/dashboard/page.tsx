@@ -1,87 +1,129 @@
-import { Search, ChevronDown, User } from "lucide-react"
+import React, { useState } from "react"
+import { Search, ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export default function Component() {
+const patientData = [
+    { name: "Keti Azura Siregar", gender: "Perempuan", age: 22, stage: 4 },
+    { name: "Shintya Ayu Warung", gender: "Perempuan", age: 22, stage: 4 },
+    { name: "Irma Amelia Novianto", gender: "Perempuan", age: 22, stage: 4 },
+    { name: "Ikhsanudin Lari Pagi", gender: "Perempuan", age: 22, stage: 4 },
+]
+
+export default function Dashboard() {
+    const [patients, setPatients] = useState(patientData)
+    const [searchTerm, setSearchTerm] = useState("")
+    const [totalPatients, setTotalPatients] = useState(350)
+
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value)
+        const filtered = patientData.filter((patient) =>
+            patient.name.toLowerCase().includes(event.target.value.toLowerCase())
+        )
+        setPatients(filtered)
+    }
+
+    const handleAddPatient = () => {
+        const newPatient = {
+            name: "New Patient",
+            gender: "Perempuan",
+            age: 30,
+            stage: 1,
+        }
+        setPatients([...patients, newPatient])
+        setTotalPatients(totalPatients + 1)
+    }
+
     return (
-        <div className="flex flex-col h-screen bg-background">
-            {/* Header */}
-            <header className="bg-muted p-4 flex justify-between items-center">
-                <h1 className="text-xl font-semibold">EsoCare</h1>
-                <Button variant="ghost" className="flex items-center space-x-2">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                        <AvatarFallback>US</AvatarFallback>
-                    </Avatar>
-                    <span>Apridian saputra</span>
-                    <ChevronDown className="h-4 w-4" />
-                </Button>
+        <div className="flex flex-col min-h-screen bg-gray-100">
+            <header className="bg-white p-4 flex justify-between items-center shadow-sm">
+                <h1 className="text-xl font-semibold text-[#7986CB]">EsoCare</h1>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="flex items-center space-x-2">
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
+                                <AvatarFallback>AS</AvatarFallback>
+                            </Avatar>
+                            <span>Apridian saputra</span>
+                            <ChevronDown className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </header>
 
-            {/* Main content */}
-            <div className="flex flex-1 overflow-hidden">
-                {/* Left sidebar */}
-                <Card className="w-1/4 m-4 overflow-hidden">
-                    <CardContent className="p-4">
-                        <h2 className="text-lg font-semibold mb-4">Total Pasien</h2>
-                        {/* Add content for total patients here */}
+            <main className="flex-1 p-6 grid grid-cols-3 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Total Pasien</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-4xl font-bold">{totalPatients}</p>
                     </CardContent>
                 </Card>
 
-                {/* Center panel */}
-                <Card className="flex-1 m-4 flex flex-col items-center justify-center">
-                    <CardContent className="text-center">
+                <Card className="col-span-1">
+                    <CardContent className="flex flex-col items-center justify-center h-full">
                         <h2 className="text-xl font-semibold mb-2">Periksa Pasien Baru</h2>
-                        <p className="text-muted-foreground mb-4">Lorem ipsum dolor sit amet consectetur.</p>
-                        <Button variant="secondary">Lorem Ipsum</Button>
+                        <p className="text-gray-600 mb-4 text-center">Lorem ipsum dolor sit amet consectetur.</p>
+                        <Button className="bg-[#7986CB] hover:bg-[#5C6BC0] text-white" onClick={handleAddPatient}>
+                            <Plus className="mr-2 h-4 w-4" /> Tambah Pasien
+                        </Button>
                     </CardContent>
                 </Card>
 
-                {/* Right sidebar */}
-                <Card className="w-1/3 m-4 overflow-hidden">
-                    <CardContent className="p-4">
-                        <h2 className="text-lg font-semibold mb-4">Daftar Pasien</h2>
-                        <div className="relative mb-4">
-                            <Input type="text" placeholder="Cari Pasien" className="pl-10" />
-                            <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div className="flex space-x-2 mb-4">
-                            <Button variant="secondary" size="sm">
-                                Semua
-                            </Button>
-                            <Button variant="outline" size="sm">
-                                Filter
-                            </Button>
-                            <Button variant="outline" size="sm">
-                                Filter
-                            </Button>
-                            <Button variant="outline" size="sm">
-                                Filter
-                            </Button>
-                        </div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Daftar Pasien</CardTitle>
+                    </CardHeader>
+                    <CardContent>
                         <div className="space-y-4">
-                            <h3 className="font-semibold">Minggu Ini</h3>
-                            {[
-                                "Keti Azura Siregar",
-                                "Shintya Ayu Warung",
-                                "Irma Amelia Novianto",
-                                "Ikhsanudin Lari Pagi",
-                                "Keti Azura Siregar",
-                                "Shintya Ayu Warung",
-                            ].map((name, index) => (
-                                <Card key={index} className="mb-2">
-                                    <CardContent className="p-3">
-                                        <p className="font-semibold">{name}</p>
-                                        <p className="text-sm text-muted-foreground">Perempuan 22 Tahun Stadium 4</p>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                            <Input
+                                type="text"
+                                placeholder="Cari Pasien"
+                                value={searchTerm}
+                                onChange={handleSearch}
+                                className="w-full"
+                            />
+                            <div className="flex space-x-2">
+                                <Button variant="secondary" size="sm">
+                                    Semua
+                                </Button>
+                                <Button variant="outline" size="sm">
+                                    Filter
+                                </Button>
+                                <Button variant="outline" size="sm">
+                                    Filter
+                                </Button>
+                                <Button variant="outline" size="sm">
+                                    Filter
+                                </Button>
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="font-semibold">Minggu Ini</h3>
+                                {patients.map((patient, index) => (
+                                    <Card key={index}>
+                                        <CardContent className="p-3">
+                                            <p className="font-semibold">{patient.name}</p>
+                                            <p className="text-sm text-gray-600">
+                                                {patient.gender} {patient.age} Tahun Stadium {patient.stage}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
-            </div>
+            </main>
         </div>
     )
 }
