@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react"
 import { Search, ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -5,36 +7,23 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-const patientData = [
-    { name: "Keti Azura Siregar", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Shintya Ayu Warung", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Irma Amelia Novianto", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Ikhsanudin Lari Pagi", gender: "Perempuan", age: 22, stage: 4 },
-]
+import PatientList from "@/components/patientList"
 
 export default function Dashboard() {
+    const patientData = [
+        { name: "Keti Azura Siregar", gender: "Perempuan", age: 22, stage: 4 },
+        { name: "Shintya Ayu Warung", gender: "Perempuan", age: 22, stage: 4 },
+        { name: "Irma Amelia Novianto", gender: "Perempuan", age: 22, stage: 4 },
+        { name: "Ikhsanudin Lari Pagi", gender: "Perempuan", age: 22, stage: 4 },
+    ]
+
     const [patients, setPatients] = useState(patientData)
-    const [searchTerm, setSearchTerm] = useState("")
     const [totalPatients, setTotalPatients] = useState(350)
 
-    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value)
-        const filtered = patientData.filter((patient) =>
-            patient.name.toLowerCase().includes(event.target.value.toLowerCase())
-        )
-        setPatients(filtered)
-    }
-
-    const handleAddPatient = () => {
-        const newPatient = {
-            name: "New Patient",
-            gender: "Perempuan",
-            age: 30,
-            stage: 1,
-        }
+    const handleAddPatient = (newPatient: any) => {
         setPatients([...patients, newPatient])
         setTotalPatients(totalPatients + 1)
+        window.location.href = "/periksa/register"
     }
 
     return (
@@ -80,49 +69,7 @@ export default function Dashboard() {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Daftar Pasien</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            <Input
-                                type="text"
-                                placeholder="Cari Pasien"
-                                value={searchTerm}
-                                onChange={handleSearch}
-                                className="w-full"
-                            />
-                            <div className="flex space-x-2">
-                                <Button variant="secondary" size="sm">
-                                    Semua
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                    Filter
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                    Filter
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                    Filter
-                                </Button>
-                            </div>
-                            <div className="space-y-2">
-                                <h3 className="font-semibold">Minggu Ini</h3>
-                                {patients.map((patient, index) => (
-                                    <Card key={index}>
-                                        <CardContent className="p-3">
-                                            <p className="font-semibold">{patient.name}</p>
-                                            <p className="text-sm text-gray-600">
-                                                {patient.gender} {patient.age} Tahun Stadium {patient.stage}
-                                            </p>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                <PatientList patients={patients} totalPatients={totalPatients} onAddPatient={handleAddPatient} />
             </main>
         </div>
     )
