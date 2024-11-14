@@ -13,7 +13,7 @@ export default function LoginPage() {
     const [error, setError] = useState("")
     const router = useRouter()
 
-    const validateLogin = (event) => {
+    const validateLogin = (event: any) => {
         event.preventDefault()
         const username = event.target.username.value
         const password = event.target.password.value
