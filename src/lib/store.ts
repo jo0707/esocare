@@ -1,11 +1,15 @@
 export function saveRegistration(registration: Registration) {
-    localStorage.setItem("registration", JSON.stringify(registration))
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem("registration", JSON.stringify(registration))
+    }
 }
 
 export function getRegistration(): Registration | null {
-    const registration = localStorage.getItem("registration")
-    if (registration) {
-        return JSON.parse(registration)
+    if (typeof localStorage !== 'undefined') {
+        const registration = localStorage.getItem("registration")
+        if (registration) {
+            return JSON.parse(registration)
+        }
     }
     return null
 }

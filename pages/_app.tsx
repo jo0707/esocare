@@ -1,6 +1,6 @@
 // pages/_app.tsx
 import type { AppProps } from "next/app"
-import { Poppins } from "@next/font/google"
+import { Poppins } from "next/font/google"
 
 // Configure the Poppins font
 const poppins = Poppins({
