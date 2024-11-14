@@ -13,18 +13,19 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import PatientDataSteps from "@/components/patientDataSteps"
+import { saveRegistration } from "@/lib/store"
 
 const formSchema = z.object({
-    namaLengkap: z.string().min(2, {
+    name: z.string().min(2, {
         message: "Nama harus minimal 2 karakter.",
     }),
-    umur: z.number().min(0).max(150, {
-        message: "Umur harus antara 0 dan 150.",
+    age: z.number().min(0).max(150, {
+        message: "age harus antara 0 dan 150.",
     }),
-    tinggiBadan: z.number().min(0).max(300, {
+    height: z.number().min(0).max(300, {
         message: "Tinggi badan harus antara 0 dan 300 cm.",
     }),
-    beratBadan: z.number().min(0).max(500, {
+    weight: z.number().min(0).max(500, {
         message: "Berat badan harus antara 0 dan 500 kg.",
     }),
 })
@@ -43,22 +44,23 @@ export default function PatientExaminationForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            namaLengkap: "",
-            umur: 0,
-            tinggiBadan: 0,
-            beratBadan: 0,
+            name: "",
+            age: 0,
+            height: 0,
+            weight: 0,
         },
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
-        const newPatient = {
-            name: values.namaLengkap,
-            gender: "Perempuan",
-            age: values.umur,
-            stage: 1,
+        const newPatient: Registration = {
+            name: values.name,
+            age: values.age,
+            height: values.height,
+            weight: values.weight,
         }
-        setPatients([...patients, newPatient])
+        saveRegistration(newPatient)
+        window.location.href = "/periksa/cancer-presence"
     }
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +84,7 @@ export default function PatientExaminationForm() {
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
-                                    name="namaLengkap"
+                                    name="name"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Nama Lengkap</FormLabel>
@@ -95,14 +97,14 @@ export default function PatientExaminationForm() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="umur"
+                                    name="age"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Umur</FormLabel>
+                                            <FormLabel>age</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
-                                                    placeholder="Umur"
+                                                    placeholder="age"
                                                     {...field}
                                                     onChange={(e) => field.onChange(+e.target.value)}
                                                 />
@@ -113,7 +115,7 @@ export default function PatientExaminationForm() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="tinggiBadan"
+                                    name="height"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Tinggi Badan</FormLabel>
@@ -131,7 +133,7 @@ export default function PatientExaminationForm() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="beratBadan"
+                                    name="weight"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Berat Badan</FormLabel>
