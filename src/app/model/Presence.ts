@@ -29,7 +29,7 @@ interface PresenceScaled {
     barretsEsophagus: number
 }
 
-interface PresenceResult {
+interface PresenceScaledResult {
     gender: number
     age: number
     bmi: number
@@ -37,5 +37,16 @@ interface PresenceResult {
     refluxHistory: number
     alcoholHistory: number
     barretsEsophagus: number
+    result: number
+}
+
+interface presenceResult {
+    gender: string
+    age: number
+    bmi: number
+    tobaccoHistory: string
+    refluxHistory: string
+    alcoholHistory: string
+    barretsEsophagus: string
     result: number
 }

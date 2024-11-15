@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import PatientDataSteps from "@/components/patientDataSteps"
-import { getRegistration } from "@/lib/store"
+import { getPresenceResult, getRegistration, savePresenceResult } from "@/lib/store"
 import { normalizePresenceData } from "@/lib/normalization"
 import { predictPresence } from "@/lib/model"
 
@@ -38,13 +38,15 @@ export default function CancerPresenceCheck() {
         return null
     }
 
+    const curPresence = getPresenceResult()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            tobaccoHistory: "1",
-            refluxHistory: "0",
-            alcoholHistory: "0",
-            barretsEsophagus: "0",
+            tobaccoHistory: (curPresence?.tobaccoHistory as any) || "1",
+            refluxHistory: (curPresence?.refluxHistory as any) || "0",
+            alcoholHistory: (curPresence?.alcoholHistory as any) || "0",
+            barretsEsophagus: (curPresence?.barretsEsophagus as any) || "0",
         },
     })
 
@@ -59,12 +61,14 @@ export default function CancerPresenceCheck() {
         }
 
         const normalizedData = normalizePresenceData(presenceData)
-        console.table(normalizedData)
-
         const confidence = await predictPresence(normalizedData)
-        setShowResult(true)
-        setConfidence(Math.round(confidence * 100))
 
+        const presenceResult: presenceResult = { ...presenceData, result: confidence }
+        savePresenceResult(presenceResult)
+
+        console.table(normalizedData)
+        setConfidence(Math.round(confidence * 100))
+        setShowResult(true)
         setLoading(false)
     }
 

@@ -4,7 +4,7 @@ import { normalize } from "./utils"
 const scalePresence = {
     gender: { min: 0, max: 1 },
     age: { min: 100, max: 25 },
-    bmi: { min: 0, max: 100 },
+    bmi: { min: 10, max: 70 },
     tobaccoHistory: { min: 1, max: 4 },
     refluxHistory: { min: 0, max: 1 },
     alcoholHistory: { min: 0, max: 1 },
@@ -67,6 +67,53 @@ export function normalizeStageData(data: Stage): StageScaled {
         scaleStage.tnmCategories.min,
         scaleStage.tnmCategories.max
     )
+
+    return scaled
+}
+
+const scaleSurvival = {
+    stageEventPathologicStage: { min: 0, max: 11 },
+    personNeoplasmCancerStatus: { min: 0, max: 1 },
+    bmi: { min: 10, max: 70 },
+    primaryPathologyResidualTumor: { min: 0, max: 3 },
+    primaryPathologyNeoplasmHistologicGrade: { min: 0, max: 3 },
+    hasDrugsInformation: { min: 0, max: 1 },
+    hasRadiationsInformation: { min: 0, max: 1 },
+    primaryPathologyRadiationTherapy: { min: 0, max: 1 },
+}
+
+export function normalizeSurvivalData(data: Survival): SurvivalScaled {
+    const scaled: SurvivalScaled = {
+        stageEventPathologicStage: 0,
+        personNeoplasmCancerStatus: 0,
+        bmi: 0,
+        primaryPathologyResidualTumor: 0,
+        primaryPathologyNeoplasmHistologicGrade: 0,
+        hasDrugsInformation: 0,
+        hasRadiationsInformation: 0,
+        primaryPathologyRadiationTherapy: 0,
+    }
+
+    scaled.stageEventPathologicStage = normalize(
+        parseInt(data.stageEventPathologicStage),
+        scaleSurvival.stageEventPathologicStage.min,
+        scaleSurvival.stageEventPathologicStage.max
+    )
+    scaled.personNeoplasmCancerStatus = parseInt(data.personNeoplasmCancerStatus)
+    scaled.bmi = normalize(data.bmi, scaleSurvival.bmi.min, scaleSurvival.bmi.max)
+    scaled.primaryPathologyResidualTumor = normalize(
+        parseInt(data.primaryPathologyResidualTumor),
+        scaleSurvival.primaryPathologyResidualTumor.min,
+        scaleSurvival.primaryPathologyResidualTumor.max
+    )
+    scaled.primaryPathologyNeoplasmHistologicGrade = normalize(
+        parseInt(data.primaryPathologyNeoplasmHistologicGrade),
+        scaleSurvival.primaryPathologyNeoplasmHistologicGrade.min,
+        scaleSurvival.primaryPathologyNeoplasmHistologicGrade.max
+    )
+    scaled.hasDrugsInformation = parseInt(data.hasDrugsInformation)
+    scaled.hasRadiationsInformation = parseInt(data.hasRadiationsInformation)
+    scaled.primaryPathologyRadiationTherapy = parseInt(data.primaryPathologyRadiationTherapy)
 
     return scaled
 }

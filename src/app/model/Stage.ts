@@ -23,12 +23,21 @@ export interface StageScaled {
     tnmCategories: number
 }
 
-export interface StageResult {
+export interface StageScaledResult {
     icd10: number
     icdOSite: number
     histologicalType: number
     histologicalGrade: number
     tnmCategories: number
+    result: number[]
+}
+
+export interface StageResult {
+    icd10: string
+    icdOSite: string
+    histologicalType: string
+    histologicalGrade: string
+    tnmCategories: string
     result: number[]
 }
 

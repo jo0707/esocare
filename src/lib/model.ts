@@ -1,4 +1,4 @@
-import { StageScaled, StageResult } from "@/app/model/Stage"
+import { StageScaled, StageScaledResult } from "@/app/model/Stage"
 import ort from "onnxruntime-web"
 
 export async function predictPresence(scaledPresence: PresenceScaled): Promise<number> {
@@ -11,7 +11,7 @@ export async function predictPresence(scaledPresence: PresenceScaled): Promise<n
     return yes
 }
 
-export async function predictStage(scaledStage: StageScaled): Promise<StageResult> {
+export async function predictStage(scaledStage: StageScaled): Promise<StageScaledResult> {
     const session = await ort.InferenceSession.create("/model/optimized_cancer_stage_model.onnx")
     const results = await session.run({
         float_input: new ort.Tensor(new Float32Array(Object.values(scaledStage)), [1, 5]),
@@ -19,4 +19,15 @@ export async function predictStage(scaledStage: StageScaled): Promise<StageResul
     console.log(results)
     const result = Array.from(results.probabilities.data as Float32Array) as number[]
     return { ...scaledStage, result }
+}
+
+export async function predictSurvival(scaledSurvival: SurvivalScaled): Promise<SurvivalScaledResult> {
+    const session = await ort.InferenceSession.create("/model/optimized_survival_outcome_model.onnx")
+    const results = await session.run({
+        float_input: new ort.Tensor(new Float32Array(Object.values(scaledSurvival)), [1, 8]),
+    })
+    console.log(results)
+    const result = results.probabilities.data[0] as number
+    
+    return { ...scaledSurvival, result }
 }
