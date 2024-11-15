@@ -17,10 +17,6 @@ import { normalizePresenceData } from "@/lib/normalization"
 import { predictPresence } from "@/lib/model"
 
 const formSchema = z.object({
-    gender: z.enum(["1", "0"], {
-        required_error: "Gender is required",
-    }),
-    age: z.number().min(0).max(120, { message: "Age must be between 0 and 120" }),
     tobaccoHistory: z.enum(["1", "2", "3", "4"], {
         required_error: "Tobacco smoking history is required",
     }),
@@ -45,8 +41,6 @@ export default function CancerPresenceCheck() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            gender: "0",
-            age: 25,
             tobaccoHistory: "1",
             refluxHistory: "0",
             alcoholHistory: "0",
@@ -59,6 +53,8 @@ export default function CancerPresenceCheck() {
 
         const presenceData: Presence = {
             bmi: registration!.weight / Math.pow(registration!.height / 100, 2),
+            age: registration!.age,
+            gender: registration!.gender,
             ...values,
         }
 
@@ -94,7 +90,7 @@ export default function CancerPresenceCheck() {
                             Back
                         </Button>
                         {confidence >= 50 ? (
-                            <Button onClick={() => router.push("/next-checking")}>Next Checking</Button>
+                            <Button onClick={() => router.push("/cancer-stage")}>Next Checking</Button>
                         ) : (
                             <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
                         )}
@@ -113,54 +109,6 @@ export default function CancerPresenceCheck() {
                 <div className="basis-1/2">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="gender"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Gender</FormLabel>
-                                        <FormControl>
-                                            <RadioGroup
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                                className="flex space-x-4"
-                                            >
-                                                <FormItem className="flex items-center space-x-2">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="1" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">Male</FormLabel>
-                                                </FormItem>
-                                                <FormItem className="flex items-center space-x-2">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="0" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">Female</FormLabel>
-                                                </FormItem>
-                                            </RadioGroup>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="age"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Age</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                placeholder="25 years old"
-                                                {...field}
-                                                onChange={(e) => field.onChange(+e.target.value)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
                             <FormField
                                 control={form.control}
                                 name="tobaccoHistory"
@@ -257,39 +205,10 @@ export default function CancerPresenceCheck() {
                     </Form>
                 </div>
                 <div className="basis-1/2">
-                    <PatientDataSteps currentStep={0} />
+                    <PatientDataSteps currentStep={1} />
                 </div>
             </CardContent>
             {loading && <p>Loading...</p>}
-            {showResult && (
-                <Card className="">
-                    <CardHeader>
-                        <CardTitle>Cancer Presence Result</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div
-                            className={`p-4 rounded-md mb-4 ${
-                                confidence < 50 ? "bg-green-200" : "bg-orange-200 border-orange-400"
-                            }`}
-                        >
-                            <p className={`font-semibold ${confidence < 50 ? "text-green-500" : "text-orange-500"}`}>
-                                Esophages Cancer Prediction: {confidence < 50 ? "Not Detected" : "Detected"}
-                            </p>
-                            <p>Confidence Score: {confidence}%</p>
-                        </div>
-                        <div className="flex justify-between">
-                            <Button variant="outline" onClick={() => setShowResult(false)}>
-                                Back
-                            </Button>
-                            {confidence >= 50 ? (
-                                <Button onClick={() => router.push("/next-checking")}>Next Checking</Button>
-                            ) : (
-                                <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
         </div>
     )
 }

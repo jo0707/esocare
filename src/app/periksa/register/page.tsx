@@ -13,14 +13,16 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import PatientDataSteps from "@/components/patientDataSteps"
-import { saveRegistration } from "@/lib/store"
+import { getRegistration, saveRegistration } from "@/lib/store"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Nama harus minimal 2 karakter.",
     }),
-    age: z.number().min(0).max(150, {
-        message: "age harus antara 0 dan 150.",
+    age: z.number().min(0).max(120, { message: "Age must be between 0 and 120" }),
+    gender: z.enum(["1", "0"], {
+        required_error: "Gender is required",
     }),
     height: z.number().min(0).max(300, {
         message: "Tinggi badan harus antara 0 dan 300 cm.",
@@ -41,13 +43,16 @@ export default function PatientExaminationForm() {
     const [patients, setPatients] = useState(patientData)
     const [searchTerm, setSearchTerm] = useState("")
 
+    const current = getRegistration()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            age: 0,
-            height: 0,
-            weight: 0,
+            name: current?.name || "",
+            gender: (current?.gender || "1") as "1" | "0" | undefined,
+            age: current?.age || 0,
+            height: current?.height || 0,
+            weight: current?.weight || 0,
         },
     })
 
@@ -55,6 +60,7 @@ export default function PatientExaminationForm() {
         console.log(values)
         const newPatient: Registration = {
             name: values.name,
+            gender: values.gender,
             age: values.age,
             height: values.height,
             weight: values.weight,
@@ -90,6 +96,36 @@ export default function PatientExaminationForm() {
                                             <FormLabel>Nama Lengkap</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Nama Lengkap" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="gender"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Gender</FormLabel>
+                                            <FormControl>
+                                                <RadioGroup
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                    className="flex space-x-4"
+                                                >
+                                                    <FormItem className="flex items-center space-x-2">
+                                                        <FormControl>
+                                                            <RadioGroupItem value="1" />
+                                                        </FormControl>
+                                                        <FormLabel className="font-normal">Male</FormLabel>
+                                                    </FormItem>
+                                                    <FormItem className="flex items-center space-x-2">
+                                                        <FormControl>
+                                                            <RadioGroupItem value="0" />
+                                                        </FormControl>
+                                                        <FormLabel className="font-normal">Female</FormLabel>
+                                                    </FormItem>
+                                                </RadioGroup>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

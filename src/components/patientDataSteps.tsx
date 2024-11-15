@@ -1,18 +1,20 @@
+import Link from "next/link"
 import React from "react"
 
 interface StepItem {
     number: number
+    route: string
     label: string
     isActive: boolean
 }
 
 const steps: StepItem[] = [
-    { number: 0, label: "Data Diri Pasien", isActive: true },
-    { number: 1, label: "Cancer Presence Model", isActive: false },
-    { number: 2, label: "Cancer Stage Model", isActive: false },
-    { number: 3, label: "Survival Outcome Model", isActive: false },
-    { number: 4, label: "Recurrence Risk Model", isActive: false },
-    { number: 5, label: "Treatment Response Model", isActive: false },
+    { number: 1, route: "/periksa/register", label: "Data Diri Pasien", isActive: true },
+    { number: 2, route: "/periksa/cancer-presence", label: "Cancer Presence Model", isActive: false },
+    { number: 3, route: "/periksa/cancer-presence", label: "Cancer Stage Model", isActive: false },
+    { number: 4, route: "/periksa/cancer-presence", label: "Survival Outcome Model", isActive: false },
+    { number: 5, route: "/periksa/cancer-presence", label: "Recurrence Risk Model", isActive: false },
+    { number: 6, route: "/periksa/cancer-presence", label: "Treatment Response Model", isActive: false },
 ]
 
 export default function PatientDataSteps({ currentStep }: { currentStep: number }) {
@@ -25,15 +27,21 @@ export default function PatientDataSteps({ currentStep }: { currentStep: number 
             {steps.map((step) => (
                 <div key={step.number} className="flex items-center space-x-3">
                     <div
-                        className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                        className={`relative flex items-center justify-center w-8 h-8 rounded-full ${
                             step.isActive ? "bg-[#7986CB] text-white" : "bg-[#E3F2FD] text-[#7986CB]"
                         }`}
                     >
+                        {/* <div className="h-10 w-1 bg-violet-400 absolute"></div> */}
                         {step.number}
                     </div>
-                    <span className={`text-sm ${step.isActive ? "text-gray-900 font-medium" : "text-[#7986CB]"}`}>
+                    <Link
+                        href={step.route}
+                        className={`text-sm hover:underline hover:text-[#586ac5] ${
+                            step.isActive ? "text-gray-900 font-medium" : "text-[#7986CB]"
+                        }`}
+                    >
                         {step.label}
-                    </span>
+                    </Link>
                 </div>
             ))}
         </div>
