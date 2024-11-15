@@ -90,7 +90,7 @@ export default function CancerPresenceCheck() {
                             Back
                         </Button>
                         {confidence >= 50 ? (
-                            <Button onClick={() => router.push("/cancer-stage")}>Next Checking</Button>
+                            <Button onClick={() => router.push("/periksa/cancer-stage")}>Next Checking</Button>
                         ) : (
                             <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
                         )}

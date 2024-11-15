@@ -1,3 +1,4 @@
+import { Stage, StageScaled } from "@/app/model/Stage"
 import { normalize } from "./utils"
 
 const scalePresence = {
@@ -32,6 +33,40 @@ export function normalizePresenceData(data: Presence): PresenceScaled {
     scaled.refluxHistory = parseInt(data.refluxHistory)
     scaled.alcoholHistory = parseInt(data.alcoholHistory)
     scaled.barretsEsophagus = parseInt(data.barretsEsophagus)
+
+    return scaled
+}
+
+const scaleStage = {
+    icd10: { min: 0, max: 4 },
+    icdOSite: { min: 0, max: 5 },
+    histologicalType: { min: 0, max: 1 },
+    histologicalGrade: { min: 0, max: 3 },
+    tnmCategories: { min: 0, max: 53 },
+}
+
+export function normalizeStageData(data: Stage): StageScaled {
+    const scaled: StageScaled = {
+        icd10: 0,
+        icdOSite: 0,
+        histologicalType: 0,
+        histologicalGrade: 0,
+        tnmCategories: 0,
+    }
+
+    scaled.icd10 = normalize(parseInt(data.icd10), scaleStage.icd10.min, scaleStage.icd10.max)
+    scaled.icdOSite = normalize(parseInt(data.icdOSite), scaleStage.icdOSite.min, scaleStage.icdOSite.max)
+    scaled.histologicalType = parseInt(data.histologicalType)
+    scaled.histologicalGrade = normalize(
+        parseInt(data.histologicalGrade),
+        scaleStage.histologicalGrade.min,
+        scaleStage.histologicalGrade.max
+    )
+    scaled.tnmCategories = normalize(
+        parseInt(data.tnmCategories),
+        scaleStage.tnmCategories.min,
+        scaleStage.tnmCategories.max
+    )
 
     return scaled
 }
