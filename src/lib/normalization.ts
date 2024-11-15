@@ -14,12 +14,12 @@ const scalePresence = {
 export function normalizePresenceData(data: Presence): PresenceScaled {
     const scaled: PresenceScaled = {
         gender: 0,
+        tobaccoHistory: 0,
+        alcoholHistory: 0,
+        refluxHistory: 0,
+        barretsEsophagus: 0,
         age: 0,
         bmi: 0,
-        tobaccoHistory: 0,
-        refluxHistory: 0,
-        alcoholHistory: 0,
-        barretsEsophagus: 0,
     }
 
     scaled.gender = parseInt(data.gender)
@@ -114,6 +114,93 @@ export function normalizeSurvivalData(data: Survival): SurvivalScaled {
     scaled.hasDrugsInformation = parseInt(data.hasDrugsInformation)
     scaled.hasRadiationsInformation = parseInt(data.hasRadiationsInformation)
     scaled.primaryPathologyRadiationTherapy = parseInt(data.primaryPathologyRadiationTherapy)
+
+    return scaled
+}
+
+const scaleRecurrence = {
+    stageEventPathologicStage: { min: 0, max: 11 },
+    vitalStatus: { min: 0, max: 1 },
+    primaryPathologyResidualTumor: { min: 0, max: 3 },
+    personNeoplasmCancerStatus: { min: 0, max: 1 },
+    primaryPathologyNeoplasmHistologicGrade: { min: 0, max: 3 },
+    primaryPathologyRadiationTherapy: { min: 0, max: 1 },
+    primaryPathologyPostoperativeRxTx: { min: 0, max: 1 },
+    bmi: { min: 10, max: 70 },
+}
+
+export function normalizeRecurrenceData(data: Recurrence): RecurrenceScaled {
+    const scaled: RecurrenceScaled = {
+        stageEventPathologicStage: 0,
+        vitalStatus: 0,
+        primaryPathologyResidualTumor: 0,
+        personNeoplasmCancerStatus: 0,
+        primaryPathologyNeoplasmHistologicGrade: 0,
+        primaryPathologyRadiationTherapy: 0,
+        primaryPathologyPostoperativeRxTx: 0,
+        bmi: 0,
+    }
+
+    scaled.stageEventPathologicStage = normalize(
+        parseInt(data.stageEventPathologicStage),
+        scaleRecurrence.stageEventPathologicStage.min,
+        scaleRecurrence.stageEventPathologicStage.max
+    )
+    scaled.vitalStatus = parseInt(data.vitalStatus)
+    scaled.primaryPathologyResidualTumor = normalize(
+        parseInt(data.primaryPathologyResidualTumor),
+        scaleRecurrence.primaryPathologyResidualTumor.min,
+        scaleRecurrence.primaryPathologyResidualTumor.max
+    )
+    scaled.personNeoplasmCancerStatus = parseInt(data.personNeoplasmCancerStatus)
+    scaled.primaryPathologyNeoplasmHistologicGrade = normalize(
+        parseInt(data.primaryPathologyNeoplasmHistologicGrade),
+        scaleRecurrence.primaryPathologyNeoplasmHistologicGrade.min,
+        scaleRecurrence.primaryPathologyNeoplasmHistologicGrade.max
+    )
+    scaled.primaryPathologyRadiationTherapy = parseInt(data.primaryPathologyRadiationTherapy)
+    scaled.primaryPathologyPostoperativeRxTx = parseInt(data.primaryPathologyPostoperativeRxTx)
+    scaled.bmi = normalize(data.bmi, scaleRecurrence.bmi.min, scaleRecurrence.bmi.max)
+
+    return scaled
+}
+
+const scaleTreatment = {
+    stageEventPathologicStage: { min: 0, max: 11 },
+    hasNewTumorEventsInformation: { min: 0, max: 1 },
+    primaryPathologyHistologicalType: { min: 0, max: 1 },
+    primaryPathologyNeoplasmHistologicGrade: { min: 0, max: 3 },
+    primaryPathologyRadiationTherapy: { min: 0, max: 1 },
+    primaryPathologyPostoperativeRxTx: { min: 0, max: 1 },
+    bmi: { min: 10, max: 70 },
+}
+
+export function normalizeTreatmentData(data: Treatment): TreatmentScaled {
+    const scaled: TreatmentScaled = {
+        stageEventPathologicStage: 0,
+        hasNewTumorEventsInformation: 0,
+        primaryPathologyHistologicalType: 0,
+        primaryPathologyNeoplasmHistologicGrade: 0,
+        primaryPathologyRadiationTherapy: 0,
+        primaryPathologyPostoperativeRxTx: 0,
+        bmi: 0,
+    }
+
+    scaled.stageEventPathologicStage = normalize(
+        parseInt(data.stageEventPathologicStage),
+        scaleTreatment.stageEventPathologicStage.min,
+        scaleTreatment.stageEventPathologicStage.max
+    )
+    scaled.hasNewTumorEventsInformation = parseInt(data.hasNewTumorEventsInformation)
+    scaled.primaryPathologyHistologicalType = parseInt(data.primaryPathologyHistologicalType)
+    scaled.primaryPathologyNeoplasmHistologicGrade = normalize(
+        parseInt(data.primaryPathologyNeoplasmHistologicGrade),
+        scaleTreatment.primaryPathologyNeoplasmHistologicGrade.min,
+        scaleTreatment.primaryPathologyNeoplasmHistologicGrade.max
+    )
+    scaled.primaryPathologyRadiationTherapy = parseInt(data.primaryPathologyRadiationTherapy)
+    scaled.primaryPathologyPostoperativeRxTx = parseInt(data.primaryPathologyPostoperativeRxTx)
+    scaled.bmi = normalize(data.bmi, scaleTreatment.bmi.min, scaleTreatment.bmi.max)
 
     return scaled
 }

@@ -28,6 +28,28 @@ export async function predictSurvival(scaledSurvival: SurvivalScaled): Promise<S
     })
     console.log(results)
     const result = results.probabilities.data[0] as number
-    
+
     return { ...scaledSurvival, result }
+}
+
+export async function predictRecurrence(scaledRecurrence: RecurrenceScaled): Promise<RecurrenceScaledResult> {
+    const session = await ort.InferenceSession.create("/model/optimized_recurrence_risk_model.onnx")
+    const results = await session.run({
+        float_input: new ort.Tensor(new Float32Array(Object.values(scaledRecurrence)), [1, 8]),
+    })
+    console.log(results)
+    const result = results.probabilities.data[0] as number
+    return { ...scaledRecurrence, result }
+}
+
+export async function predictTreatmentResponse(
+    scaledTreatmentResponse: TreatmentScaled
+): Promise<TreatmentScaledResult> {
+    const session = await ort.InferenceSession.create("/model/optimized_treatment_response_model.onnx")
+    const results = await session.run({
+        float_input: new ort.Tensor(new Float32Array(Object.values(scaledTreatmentResponse)), [1,7]),
+    })
+    console.log(results)
+    const result = Array.from(results.probabilities.data as Float32Array) as number[]
+    return { ...scaledTreatmentResponse, result }
 }

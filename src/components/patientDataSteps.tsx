@@ -13,11 +13,10 @@ const steps: StepItem[] = [
     { number: 2, route: "/periksa/cancer-presence", label: "Cancer Presence", isActive: false },
     { number: 3, route: "/periksa/cancer-stage", label: "Cancer Stage", isActive: false },
     { number: 4, route: "/periksa/cancer-survival-outcome", label: "Survival Outcome", isActive: false },
-    { number: 5, route: "/periksa/cancer-reccurence-risk", label: "Recurrence Risk", isActive: false },
     {
-        number: 6,
-        route: "/periksa/cancer-evaluate-treatment-response",
-        label: "Treatment Response",
+        number: 5,
+        route: "/periksa/cancer-reccurence-risk",
+        label: "Recurrence Risk & Treatment Response",
         isActive: false,
     },
 ]

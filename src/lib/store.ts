@@ -63,3 +63,35 @@ export function getSurvivalResult(): SurvivalResult | null {
     }
     return null
 }
+
+export function saveRecurrenceResult(recurrenceResult: RecurrenceResult) {
+    if (typeof localStorage !== "undefined") {
+        localStorage.setItem("recurrenceResult", JSON.stringify(recurrenceResult))
+    }
+}
+
+export function getRecurrenceResult(): RecurrenceResult | null {
+    if (typeof localStorage !== "undefined") {
+        const recurrenceResult = localStorage.getItem("recurrenceResult")
+        if (recurrenceResult) {
+            return JSON.parse(recurrenceResult)
+        }
+    }
+    return null
+}
+
+export function saveTreatmentResult(treatmentResult: TreatmentResult) {
+    if (typeof localStorage !== "undefined") {
+        localStorage.setItem("treatmentResult", JSON.stringify(treatmentResult))
+    }
+}
+
+export function getTreatmentResult(): TreatmentResult | null {
+    if (typeof localStorage !== "undefined") {
+        const treatmentResult = localStorage.getItem("treatmentResult")
+        if (treatmentResult) {
+            return JSON.parse(treatmentResult)
+        }
+    }
+    return null
+}

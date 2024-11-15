@@ -10,136 +10,159 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import PatientDataSteps from "@/components/patientDataSteps"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { normalizePresenceData, normalizeStageData, normalizeSurvivalData } from "@/lib/normalization"
-import { predictPresence, predictStage, predictSurvival } from "@/lib/model"
+import {
+    normalizePresenceData,
+    normalizeRecurrenceData,
+    normalizeStageData,
+    normalizeSurvivalData,
+    normalizeTreatmentData,
+} from "@/lib/normalization"
+import {
+    predictPresence,
+    predictRecurrence,
+    predictStage,
+    predictSurvival,
+    predictTreatmentResponse,
+} from "@/lib/model"
 import { Stage, StageScaledResult, stages } from "@/app/model/Stage"
-import { getPresenceResult, getStageResult, getSurvivalResult, saveStageResult, saveSurvivalResult } from "@/lib/store"
+import {
+    getPresenceResult,
+    getRecurrenceResult,
+    getStageResult,
+    getSurvivalResult,
+    saveRecurrenceResult,
+    saveStageResult,
+    saveSurvivalResult,
+    saveTreatmentResult,
+} from "@/lib/store"
 
-const neoplasmCancerStatusOptions = {
-    "TUMOR FREE": "0",
-    "WITH TUMOR": "1",
-}
-
-const primaryPathologyResidualTumorOptions = {
-    R0: "0",
-    R1: "1",
-    R2: "2",
-    RX: "3",
-}
-
-const hasDrugsInformationOptions = {
+const primaryPathologyPostoperativeRxTxOptions = {
     NO: "0",
     YES: "1",
 }
 
-const hasRadiationsInformationOptions = {
-    NO: "0",
-    YES: "1",
-}
-
-const primaryPathologyRadiationTherapyOptions = {
-    NO: "0",
-    YES: "1",
-}
+const primaryPathologyResidualTumorOptions = [
+    { label: "R0", value: "0" },
+    { label: "R1", value: "1" },
+    { label: "R2", value: "2" },
+    { label: "RX", value: "3" },
+]
 
 const formSchema = z.object({
-    personNeoplasmCancerStatus: z.enum(Object.values(neoplasmCancerStatusOptions) as [string, ...[string]], {
-        required_error: "Please select neoplasm cancer status",
-    }),
-    primaryPathologyResidualTumor: z.enum(
-        Object.values(primaryPathologyResidualTumorOptions) as [string, ...[string]],
-        {
-            required_error: "Please select primary pathology residual tumor",
-        }
-    ),
-    hasDrugsInformation: z.enum(Object.values(hasDrugsInformationOptions) as [string, ...[string]], {
-        required_error: "Please select has drugs information",
-    }),
-    hasRadiationsInformation: z.enum(Object.values(hasRadiationsInformationOptions) as [string, ...[string]], {
-        required_error: "Please select has radiations information",
-    }),
-    primaryPathologyRadiationTherapy: z.enum(
-        Object.values(primaryPathologyRadiationTherapyOptions) as [string, ...[string]],
-        { required_error: "Please select primary pathology radiation therapy" }
+    primaryPathologyPostoperativeRxTx: z.enum(
+        Object.values(primaryPathologyPostoperativeRxTxOptions) as [string, ...[string]],
+        { required_error: "Please select Post-Operative treatment" }
     ),
 })
 
-export default function CancerSurvivalOutcomeCheck() {
+export default function CancerRecurrenceOutcomeCheck() {
     const [showResult, setShowResult] = useState(false)
     const [confidence, setConfidence] = useState(0)
-    const [vital, setVital] = useState(true)
+    const [treatmentConfidence, setTreatmentConfidence] = useState(0)
+    const [recur, setRecur] = useState(true)
+    const [treatmentIndex, setTreatmentIndex] = useState(0)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    if (!getStageResult()) return router.push("/periksa/cancer-stage")
+    if (!getSurvivalResult()) return router.push("/periksa/cancer-survival-outcome")
 
     const curSurvival = getSurvivalResult()
     const curPresence = getPresenceResult()
     const curStage = getStageResult()
+    const curRecurrence = getRecurrenceResult()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            personNeoplasmCancerStatus: (curSurvival?.personNeoplasmCancerStatus as any) ?? "0",
-            primaryPathologyResidualTumor: (curSurvival?.primaryPathologyResidualTumor as any) ?? "0",
-            hasDrugsInformation: (curSurvival?.hasDrugsInformation as any) ?? "0",
-            hasRadiationsInformation: (curSurvival?.hasRadiationsInformation as any) ?? "0",
-            primaryPathologyRadiationTherapy: (curSurvival?.primaryPathologyRadiationTherapy as any) ?? "0",
+            primaryPathologyPostoperativeRxTx: (curRecurrence?.primaryPathologyPostoperativeRxTx as any) ?? "0",
         },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
 
-        const survivalData: Survival = {
-            bmi: curPresence?.bmi ?? 10,
+        // predict recurrence
+        const recurrenceData: Recurrence = {
             stageEventPathologicStage: (curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0).toString(),
-            primaryPathologyNeoplasmHistologicGrade: (curStage?.histologicalGrade ?? 0).toString(),
-            ...values,
+            vitalStatus: ((curSurvival?.result || 0) >= 0.5 ? 1 : 0).toString(),
+            primaryPathologyResidualTumor: curSurvival?.primaryPathologyResidualTumor as string,
+            personNeoplasmCancerStatus: curSurvival?.personNeoplasmCancerStatus as string,
+            primaryPathologyNeoplasmHistologicGrade: curSurvival?.primaryPathologyNeoplasmHistologicGrade as string,
+            primaryPathologyRadiationTherapy: curSurvival?.primaryPathologyRadiationTherapy as string,
+            primaryPathologyPostoperativeRxTx: values.primaryPathologyPostoperativeRxTx,
+            bmi: curSurvival?.bmi as number,
         }
 
-        const normalizedData = normalizeSurvivalData(survivalData)
-        console.table(normalizedData)
-
-        const survivalScaledResult = await predictSurvival(normalizedData)
-        console.log(survivalScaledResult)
-
-        const survivalResult = {
-            ...survivalData,
-            result: survivalScaledResult.result,
+        const normalizedData = normalizeRecurrenceData(recurrenceData)
+        const recurrenceScaledResult = await predictRecurrence(normalizedData)
+        const recurrenceResult = {
+            ...recurrenceData,
+            result: recurrenceScaledResult.result,
         }
-        saveSurvivalResult(survivalResult)
+        saveRecurrenceResult(recurrenceResult)
 
-        setVital(survivalResult.result >= 0.5)
-        setConfidence(Math.round(survivalScaledResult.result * 100))
+        // predict treatemnt response
+        const treatmentData: Treatment = {
+            stageEventPathologicStage: (curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0).toString(),
+            hasNewTumorEventsInformation: (recurrenceResult?.result >= 0.5).toString(),
+            primaryPathologyHistologicalType: curStage?.histologicalType as string,
+            primaryPathologyNeoplasmHistologicGrade: curSurvival?.primaryPathologyNeoplasmHistologicGrade as string,
+            primaryPathologyRadiationTherapy: curSurvival?.primaryPathologyRadiationTherapy as string,
+            primaryPathologyPostoperativeRxTx: values.primaryPathologyPostoperativeRxTx,
+            bmi: curPresence?.bmi as number,
+        }
+
+        const normalizedTreatmentData = normalizeTreatmentData(treatmentData)
+        const treatmentScaledResult = await predictTreatmentResponse(normalizedTreatmentData)
+        const treatmentResult = {
+            ...treatmentData,
+            result: treatmentScaledResult.result,
+        }
+        const highestTreatemntConfidence = Math.max(...treatmentResult.result)
+        const highestTreatmentIndex = treatmentResult.result.indexOf(highestTreatemntConfidence)
+
+        saveTreatmentResult(treatmentResult)
+
+        setTreatmentIndex(highestTreatmentIndex)
+        setTreatmentConfidence(Math.round(highestTreatemntConfidence * 100))
+        setRecur(recurrenceResult.result >= 0.5)
+        setConfidence(Math.round(recurrenceScaledResult.result * 100))
         setShowResult(true)
         setLoading(false)
+    }
+
+    function save() {
+        router.push("/dashboard")
     }
 
     if (showResult) {
         return (
             <Card className="">
                 <CardHeader>
-                    <CardTitle>Cancer Presence Result</CardTitle>
+                    <CardTitle>Cancer Recurrence Result</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div
                         className={`p-4 rounded-md mb-4 border ${
-                            vital ? "bg-green-200 border-green-400" : "bg-red-200 border-red-400"
+                            recur ? "bg-red-200 border-red-400" : "bg-green-200 border-green-400"
                         }`}
                     >
-                        <p className={`font-semibold ${vital ? "text-green-500" : "text-red-500"}`}>
-                            Patient Survival Likeliness: {vital ? "High" : "Low"}
+                        <p className={`font-semibold ${recur ? "text-red-500" : "text-green-500"}`}>
+                            Recurrence Risk: {recur ? "High" : "Low"}
                         </p>
                         <p>Confidence Score: {confidence}%</p>
+                    </div>
+                    <div className={`p-4 rounded-md mb-4 border`}>
+                        <p className={`font-semibold`}>
+                            Treatment Response: {primaryPathologyResidualTumorOptions[treatmentIndex].label}
+                        </p>
+                        <p>Confidence Score: {treatmentConfidence}%</p>
                     </div>
                     <div className="flex justify-between">
                         <Button variant="outline" onClick={() => setShowResult(false)}>
                             Back
                         </Button>
-                        <Button onClick={() => router.push("/periksa/cancer-recurrence-risk")}>
-                            Check Recurrence Risk
-                        </Button>
+                        <Button onClick={save}>Save Patient Result</Button>
                     </div>
                 </CardContent>
             </Card>
@@ -150,7 +173,7 @@ export default function CancerSurvivalOutcomeCheck() {
         <div className="w-full p-4">
             <Card className="border-0 shadow-none">
                 <CardHeader>
-                    <CardTitle className="text-xl font-semibold">Cancer Survival Check</CardTitle>
+                    <CardTitle className="text-xl font-semibold">Recurrence Risk & Treatment Response</CardTitle>
                 </CardHeader>
                 <CardContent className="flex gap-16">
                     <div className="basis-1/2">
@@ -158,125 +181,17 @@ export default function CancerSurvivalOutcomeCheck() {
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
-                                    name="hasDrugsInformation"
+                                    name="primaryPathologyPostoperativeRxTx"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Has Drugs Information</FormLabel>
+                                            <FormLabel>Postoperative Treatment for Primary Condition</FormLabel>
                                             <FormControl>
                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                     <SelectTrigger className="w-full">
                                                         <SelectValue />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {Object.entries(hasDrugsInformationOptions).map(
-                                                            ([label, value]) => (
-                                                                <SelectItem key={value} value={value}>
-                                                                    {label}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="hasRadiationsInformation"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Has Radiation Information</FormLabel>
-                                            <FormControl>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {Object.entries(hasRadiationsInformationOptions).map(
-                                                            ([label, value]) => (
-                                                                <SelectItem key={value} value={value}>
-                                                                    {label}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="personNeoplasmCancerStatus"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Person Neoplasm Cancer Status</FormLabel>
-                                            <FormControl>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {Object.entries(neoplasmCancerStatusOptions).map(
-                                                            ([label, value]) => (
-                                                                <SelectItem key={value} value={value}>
-                                                                    {label}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="primaryPathologyRadiationTherapy"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Radiation Therapy</FormLabel>
-                                            <FormControl>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {Object.entries(primaryPathologyRadiationTherapyOptions).map(
-                                                            ([label, value]) => (
-                                                                <SelectItem key={value} value={value}>
-                                                                    {label}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="primaryPathologyResidualTumor"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Residual Tumor</FormLabel>
-                                            <FormControl>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {Object.entries(primaryPathologyResidualTumorOptions).map(
+                                                        {Object.entries(primaryPathologyPostoperativeRxTxOptions).map(
                                                             ([label, value]) => (
                                                                 <SelectItem key={value} value={value}>
                                                                     {label}
@@ -300,7 +215,7 @@ export default function CancerSurvivalOutcomeCheck() {
                         </Form>
                     </div>
                     <div className="basis-1/2">
-                        <PatientDataSteps currentStep={3} />
+                        <PatientDataSteps currentStep={4} />
                     </div>
                 </CardContent>
             </Card>
