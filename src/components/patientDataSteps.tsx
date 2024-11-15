@@ -27,7 +27,7 @@ export default function PatientDataSteps({ currentStep }: { currentStep: number 
     })
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-3">
             {steps.map((step) => (
                 <div key={step.number} className="flex items-center space-x-3">
                     <div
@@ -35,7 +35,6 @@ export default function PatientDataSteps({ currentStep }: { currentStep: number 
                             step.isActive ? "bg-[#7986CB] text-white" : "bg-[#E3F2FD] text-[#7986CB]"
                         }`}
                     >
-                        {/* <div className="h-10 w-1 bg-violet-400 absolute"></div> */}
                         {step.number}
                     </div>
                     <Link

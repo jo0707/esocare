@@ -39,7 +39,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients, totalPatients, onAd
     }
 
     return (
-        <Card>
+        <Card className="border-none">
             <CardHeader>
                 <CardTitle>Daftar Pasien</CardTitle>
             </CardHeader>
@@ -69,7 +69,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients, totalPatients, onAd
                     <div className="space-y-2">
                         <h3 className="font-semibold">Minggu Ini</h3>
                         {filteredPatients.map((patient, index) => (
-                            <Card key={index}>
+                            <Card key={index} className="shadow-sm">
                                 <CardContent className="p-3">
                                     <p className="font-semibold">{patient.name}</p>
                                     <p className="text-sm text-gray-600">

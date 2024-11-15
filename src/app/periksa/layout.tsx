@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import PatientList from "@/components/patientList"
+import Header from "@/components/header"
 
 const patientData = [
     { name: "Keti Azura Siregar", gender: "Perempuan", age: 22, stage: 4 },
@@ -31,21 +32,13 @@ export default function PatientExaminationForm({ children }: { children: React.R
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#F3F4F6]">
-            <header className="bg-white p-4 flex justify-between items-center shadow-sm">
-                <h1 className="text-xl font-semibold text-[#7986CB]">EsoCare</h1>
-                <div className="flex items-center space-x-2 bg-[#FFE0B2] rounded-full px-4 py-2">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                        <AvatarFallback>AS</AvatarFallback>
-                    </Avatar>
-                    <span>Apridian saputra</span>
-                    <ChevronDown className="h-4 w-4" />
-                </div>
-            </header>
+        <div className="flex flex-col min-h-screen bg-[#F1F3FF]">
+            <div className="rounded-lg overflow-clip m-6 mb-0">
+                <Header />
+            </div>
 
             <main className="flex-1 p-6 grid grid-cols-3 gap-6">
-                <Card className="col-span-2">{children}</Card>
+                <Card className="col-span-2 border-none">{children}</Card>
                 <PatientList patients={patients} totalPatients={totalPatients} onAddPatient={handleAddPatient} />
             </main>
         </div>

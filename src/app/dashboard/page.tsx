@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import PatientList from "@/components/patientList"
+import Header from "@/components/header"
 
 export default function Dashboard() {
     const patientData = [
@@ -27,30 +28,13 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
-            <header className="bg-white p-4 flex justify-between items-center shadow-sm">
-                <h1 className="text-xl font-semibold text-[#7986CB]">EsoCare</h1>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center space-x-2">
-                            <Avatar className="h-8 w-8">
-                                <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                                <AvatarFallback>AS</AvatarFallback>
-                            </Avatar>
-                            <span>Apridian saputra</span>
-                            <ChevronDown className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </header>
+        <div className="flex flex-col min-h-screen bg-[#F1F3FF]">
+            <div className="rounded-lg overflow-clip m-6 mb-0">
+                <Header />
+            </div>
 
             <main className="flex-1 p-6 grid grid-cols-3 gap-6">
-                <Card>
+                <Card className="border-none">
                     <CardHeader>
                         <CardTitle>Total Pasien</CardTitle>
                     </CardHeader>
@@ -59,12 +43,12 @@ export default function Dashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="col-span-1">
+                <Card className="col-span-1 border-none">
                     <CardContent className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-xl font-semibold mb-2">Periksa Pasien Baru</h2>
-                        <p className="text-gray-600 mb-4 text-center">Lorem ipsum dolor sit amet consectetur.</p>
-                        <Button className="bg-[#7986CB] hover:bg-[#5C6BC0] text-white" onClick={handleAddPatient}>
-                            <Plus className="mr-2 h-4 w-4" /> Tambah Pasien
+                        <h2 className="font-semibold font-lg">Periksa Pasien Baru</h2>
+                        <p className="text-gray-600 mb-8 text-sm text-center">Periksa apakah pasien memiliki kemungkinan mengalami kanker esofagus</p>
+                        <Button className="bg-[#7986CB] hover:bg-[#5C6BC0] text-white rounded-full px-8" onClick={handleAddPatient}>
+                            Tambah Pasien
                         </Button>
                     </CardContent>
                 </Card>
