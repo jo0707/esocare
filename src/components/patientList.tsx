@@ -61,7 +61,7 @@ const PatientList: React.FC = () => {
                             >
                                 <p className="font-semibold capitalize ">{patient.name}</p>
                                 <div className="text-gray-600 text-sm flex flex-wrap gap-4">
-                                    <p>{patient.gender == "0" ? "Laki-Laki" : "Perempuan"}</p>
+                                    <p>{patient.gender == "1" ? "Laki-Laki" : "Perempuan"}</p>
                                     <p>{patient.age} Tahun</p>
                                     <p>{patient.stage}</p>
                                 </div>
