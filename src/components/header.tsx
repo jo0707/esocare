@@ -4,10 +4,12 @@ import { ChevronDown } from "lucide-react"
 import React from "react"
 import { Button } from "./ui/button"
 import Link from "next/link"
-
+import { useRouter } from "next/navigation"
 type Props = {}
 
 export default function Header({}: Props) {
+    const router = useRouter()
+
     return (
         <header className="bg-white p-4 flex justify-between items-center shadow-sm">
             <Link href="/dashboard">
@@ -32,7 +34,9 @@ export default function Header({}: Props) {
                 <DropdownMenuContent className="rounded-lg bg-white w-full text-center shadow-xl">
                     <DropdownMenuItem className="py-3 w-48">Profile</DropdownMenuItem>
                     <DropdownMenuItem className="py-3 w-48">Settings</DropdownMenuItem>
-                    <DropdownMenuItem className="py-3 w-48">Logout</DropdownMenuItem>
+                    <DropdownMenuItem className="py-3 w-48" onClick={() => router.push("/")}>
+                        Logout
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

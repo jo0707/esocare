@@ -1,4 +1,4 @@
-import { StageScaled, StageScaledResult } from "@/app/model/Stage"
+import { StageScaled, StageScaledResult } from "@/model/Stage"
 import ort from "onnxruntime-web"
 
 export async function predictPresence(scaledPresence: PresenceScaled): Promise<number> {
@@ -7,7 +7,7 @@ export async function predictPresence(scaledPresence: PresenceScaled): Promise<n
         float_input: new ort.Tensor(new Float32Array(Object.values(scaledPresence)), [1, 7]),
     })
     console.log(results)
-    const yes = results.probabilities.data[0] as number
+    const yes = results.probabilities.data[1] as number
     return yes
 }
 
@@ -47,7 +47,7 @@ export async function predictTreatmentResponse(
 ): Promise<TreatmentScaledResult> {
     const session = await ort.InferenceSession.create("/model/optimized_treatment_response_model.onnx")
     const results = await session.run({
-        float_input: new ort.Tensor(new Float32Array(Object.values(scaledTreatmentResponse)), [1,7]),
+        float_input: new ort.Tensor(new Float32Array(Object.values(scaledTreatmentResponse)), [1, 7]),
     })
     console.log(results)
     const result = Array.from(results.probabilities.data as Float32Array) as number[]

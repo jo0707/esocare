@@ -87,7 +87,7 @@ export default function CancerPresenceCheck() {
                         <p className={`font-semibold ${confidence < 50 ? "text-green-500" : "text-orange-500"}`}>
                             Esophages Cancer Prediction: {confidence < 50 ? "Not Detected" : "Detected"}
                         </p>
-                        <p>Confidence Score: {confidence}%</p>
+                        <p>Confidence Score: {confidence >= 50 ? confidence : 100 - confidence}%</p>
                     </div>
                     <div className="flex justify-between">
                         <Button variant="outline" onClick={() => setShowResult(false)}>

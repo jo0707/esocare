@@ -1,4 +1,4 @@
-import { StageResult, StageScaledResult } from "@/app/model/Stage"
+import { StageResult, StageScaledResult } from "@/model/Stage"
 
 export function saveRegistration(registration: Registration) {
     if (typeof localStorage !== "undefined") {
@@ -94,4 +94,27 @@ export function getTreatmentResult(): TreatmentResult | null {
         }
     }
     return null
+}
+
+export function getPatientResults(): Patient[] {
+    if (typeof localStorage !== "undefined") {
+        const patientResults = localStorage.getItem("patientResults")
+        if (patientResults) {
+            return JSON.parse(patientResults)
+        }
+    }
+    return []
+}
+
+export function savePatientResult(patientResult: Patient) {
+    if (typeof localStorage !== "undefined") {
+        // append patient result to the list
+        const patientResults = getPatientResults()
+        if (patientResults) {
+            patientResults.push(patientResult)
+            localStorage.setItem("patientResults", JSON.stringify(patientResults))
+        } else {
+            localStorage.setItem("patientResults", JSON.stringify([patientResult]))
+        }
+    }
 }

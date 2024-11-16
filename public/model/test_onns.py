@@ -1,41 +1,49 @@
-import onnxruntime
+import onnxruntime as rt
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
 
 # Load the ONNX model
-session = onnxruntime.InferenceSession("optimized_cancer_presence_model.onnx")
+sess = rt.InferenceSession("optimized_cancer_presence_model.onnx")
 
-# Sample Data and Expected Values
-# sample_data = [
-#     [1, 1, 0, 1, 0, -15000, 25],  # Sample 1
-#     [0, 0, 1, 0, 1, -20000, 30],  # Sample 2
-#     [1, 2, 1, 1, 1, -10000, 22]   # Sample 3
-# ]
-
-# Sample Data (Scaled between 0 and 1) and Expected Values
+# Sample normalized data (replace with your actual normalized values)
 sample_data = [
-    [1.0, 0.5, 0.0, 1.0, 0.0, 0.6, 0.375],  # Sample 1
-    [0.0, 0.0, 1.0, 0.0, 1.0, 0.4, 0.5],  # Sample 2
-    [1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 0.3],  # Sample 3
+    [0, 0, 0, 0, 0, 0.5, 0.6],  # Example 1
+    [1, 1, 1, 1, 1, 0.2, 0.8],  # Example 2
+    [0, 1, 0, 1, 0, 0.7, 0.4],  # Example 3
+    [1, 0, 1, 0, 1, 0.3, 0.9],  # Example 4
+    [0, 0, 1, 1, 0, 0.9, 0.5],  # Example 5
+    [1, 0, 0, 1, 1, 0.4, 0.7],  # Example 6
+    [0, 1, 1, 0, 0, 0.6, 0.3],  # Example 7
+    [1, 1, 0, 0, 1, 0.8, 0.6],  # Example 8
+    [0, 0, 1, 0, 0, 0.1, 0.9],  # Example 9
+    [1, 1, 1, 1, 0, 0.7, 0.5],  # Example 10
+    [0, 1, 0, 0, 1, 0.3, 0.6],  # Example 11
+    [1, 0, 1, 1, 0, 0.9, 0.4],  # Example 12
+    [0, 0, 0, 1, 1, 0.2, 0.7],  # Example 13
+    [1, 1, 0, 1, 0, 0.5, 0.3],  # Example 14
+    [0, 1, 1, 0, 1, 0.8, 0.9]   # Example 15
 ]
 
-expected_values = [0, 1, 1]  # Expected values for each sample
 
-# Get input name
-input_name = session.get_inputs()[0].name
+# Expected outputs (0: Cancer not present, 1: Cancer present)
+expected_outputs = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]  
 
-# Predict one by one
-for i, data_point in enumerate(sample_data):
-    # Convert data point to NumPy array with correct shape and data type
-    input_data = {input_name: np.array([data_point], dtype=np.float32)}
+# Convert to NumPy array
+input_data = np.array(sample_data, dtype=np.float32)
 
-    # Perform prediction
-    predictions = session.run(None, input_data)
+# Get the model's input name
+input_name = sess.get_inputs()[0].name
 
-    # Get predicted class
-    predicted_class = predictions[0][0]  # Access the first element of the output
+# Perform inference
+pred_onx = sess.run(None, {input_name: input_data})
 
-    # Compare with expected value
-    expected_value = expected_values[i]
-    print(f"Sample {i + 1}: Predicted Class = {predicted_class}, Expected = {expected_value}, Match = {predicted_class == expected_value}")
-    
+# Get predicted labels (0 or 1)
+predicted_labels = pred_onx[0]
+
+# Print predictions and expected outputs
+for i in range(len(sample_data)):
+    print(f"Sample {i + 1}:")
+    print(f"  Input: {sample_data[i]}")
+    # print(f"  Predicted Output: {0 if pred_onx[1][i][1] >= .5 else 1}")
+    print(f"  Predicted Output: {pred_onx[1][i]}")
+    print(f"  Expected Output: {expected_outputs[i]}") 
+    print("-" * 20)

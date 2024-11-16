@@ -24,12 +24,14 @@ import {
     predictSurvival,
     predictTreatmentResponse,
 } from "@/lib/model"
-import { Stage, StageScaledResult, stages } from "@/app/model/Stage"
+import { Stage, StageScaledResult, stages } from "@/model/Stage"
 import {
     getPresenceResult,
     getRecurrenceResult,
+    getRegistration,
     getStageResult,
     getSurvivalResult,
+    savePatientResult,
     saveRecurrenceResult,
     saveStageResult,
     saveSurvivalResult,
@@ -66,6 +68,7 @@ export default function CancerRecurrenceOutcomeCheck() {
 
     if (!getSurvivalResult()) return router.push("/periksa/cancer-survival-outcome")
 
+    const curRegistration = getRegistration()
     const curSurvival = getSurvivalResult()
     const curPresence = getPresenceResult()
     const curStage = getStageResult()
@@ -77,6 +80,26 @@ export default function CancerRecurrenceOutcomeCheck() {
             primaryPathologyPostoperativeRxTx: (curRecurrence?.primaryPathologyPostoperativeRxTx as any) ?? "0",
         },
     })
+
+    async function savePatientData(treatmentResult: TreatmentResult, recurrenceResult: RecurrenceResult) {
+        const stageIndex = curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0
+        const treatmentIndex = treatmentResult.result.indexOf(Math.max(...treatmentResult.result))
+        const patientData: Patient = {
+            name: curRegistration?.name as string,
+            age: curRegistration?.age as number,
+            gender: curRegistration?.gender as string,
+            bmi: curPresence?.bmi as number,
+            presence: curPresence?.result as number,
+            stageIndex: stageIndex,
+            stage: stages[stageIndex],
+            survival: curSurvival?.result as number,
+            recurrence: recurrenceResult.result,
+            treatmentResponseIndex: treatmentIndex,
+            treatmentResponse: primaryPathologyResidualTumorOptions[treatmentIndex].label,
+        }
+
+        savePatientResult(patientData)
+    }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
@@ -127,6 +150,9 @@ export default function CancerRecurrenceOutcomeCheck() {
         setTreatmentConfidence(Math.round(highestTreatemntConfidence * 100))
         setRecur(recurrenceResult.result >= 0.5)
         setConfidence(Math.round(recurrenceScaledResult.result * 100))
+
+        savePatientData(treatmentResult, recurrenceResult)
+
         setShowResult(true)
         setLoading(false)
     }

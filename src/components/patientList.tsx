@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
+import { getPatientResults } from "@/lib/store"
 
 interface Patient {
     name: string
@@ -16,8 +17,9 @@ interface PatientListProps {
     onAddPatient: (newPatient: Patient) => void
 }
 
-const PatientList: React.FC<PatientListProps> = ({ patients, totalPatients, onAddPatient }) => {
+const PatientList: React.FC<PatientListProps> = () => {
     const [searchTerm, setSearchTerm] = useState("")
+    const patients = getPatientResults()
     const [filteredPatients, setFilteredPatients] = useState(patients)
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,16 +28,6 @@ const PatientList: React.FC<PatientListProps> = ({ patients, totalPatients, onAd
             patient.name.toLowerCase().includes(event.target.value.toLowerCase())
         )
         setFilteredPatients(filtered)
-    }
-
-    const handleAddPatient = () => {
-        const newPatient = {
-            name: "New Patient",
-            gender: "Perempuan",
-            age: 30,
-            stage: 1,
-        }
-        onAddPatient(newPatient)
     }
 
     return (
@@ -56,18 +48,8 @@ const PatientList: React.FC<PatientListProps> = ({ patients, totalPatients, onAd
                         <Button variant="secondary" size="sm">
                             Semua
                         </Button>
-                        <Button variant="outline" size="sm">
-                            Filter
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            Filter
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            Filter
-                        </Button>
                     </div>
                     <div className="space-y-2">
-                        <h3 className="font-semibold">Minggu Ini</h3>
                         {filteredPatients.map((patient, index) => (
                             <Card key={index} className="shadow-sm">
                                 <CardContent className="p-3">

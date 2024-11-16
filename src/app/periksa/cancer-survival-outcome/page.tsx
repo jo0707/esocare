@@ -12,7 +12,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { normalizePresenceData, normalizeStageData, normalizeSurvivalData } from "@/lib/normalization"
 import { predictPresence, predictStage, predictSurvival } from "@/lib/model"
-import { Stage, StageScaledResult, stages } from "@/app/model/Stage"
+import { Stage, StageScaledResult, stages } from "@/model/Stage"
 import { getPresenceResult, getStageResult, getSurvivalResult, saveStageResult, saveSurvivalResult } from "@/lib/store"
 
 const neoplasmCancerStatusOptions = {

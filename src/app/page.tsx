@@ -32,7 +32,11 @@ export default function LoginPage() {
         >
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center text-[#7986CB]">esoCare</CardTitle>
+                    <CardTitle className="text-2xl text-center text-violet-500">
+                        <h1>
+                            <b>Eso</b>Care
+                        </h1>
+                    </CardTitle>
                     <p className="text-center text-gray-600">Login to your account</p>
                 </CardHeader>
                 <CardContent>
@@ -61,7 +65,7 @@ export default function LoginPage() {
                             </div>
                         </div>
                         {error && <p className="text-red-500 text-sm">{error}</p>}
-                        <Button type="submit" className="w-full">
+                        <Button type="submit" className="w-full bg-violet-500">
                             Login
                         </Button>
                     </form>

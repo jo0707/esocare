@@ -12,7 +12,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { normalizePresenceData, normalizeStageData } from "@/lib/normalization"
 import { predictPresence, predictStage } from "@/lib/model"
-import { Stage, StageScaledResult, stages } from "@/app/model/Stage"
+import { Stage, StageScaledResult, stages } from "@/model/Stage"
 import { getPresenceResult, getStageResult, saveStageResult } from "@/lib/store"
 
 const icd10Options = {

@@ -1,4 +1,4 @@
-import { Stage, StageScaled } from "@/app/model/Stage"
+import { Stage, StageScaled } from "@/model/Stage"
 import { normalize } from "./utils"
 
 const scalePresence = {
