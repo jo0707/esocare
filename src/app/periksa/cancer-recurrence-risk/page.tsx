@@ -154,7 +154,7 @@ export default function CancerRecurrenceOutcomeCheck() {
     }
 
     function save() {
-        savePatientResult(patient)
+        if (patient) savePatientResult(patient)
         router.push("/dashboard")
     }
 
