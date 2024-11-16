@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 
 export function normalize(value: number, min: number, max: number) {
     const normalizedValue = (value - min) / (max - min)
-    return parseFloat(normalizedValue.toLocaleString(undefined, { maximumFractionDigits: 2 }))
+    return parseFloat(normalizedValue.toFixed(2))
 }

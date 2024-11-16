@@ -33,7 +33,7 @@ export function normalizePresenceData(data: Presence): PresenceScaled {
     scaled.refluxHistory = parseInt(data.refluxHistory)
     scaled.alcoholHistory = parseInt(data.alcoholHistory)
     scaled.barretsEsophagus = parseInt(data.barretsEsophagus)
-
+    
     return scaled
 }
 
