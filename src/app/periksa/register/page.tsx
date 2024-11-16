@@ -77,9 +77,9 @@ export default function PatientExaminationForm() {
                                     name="name"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Nama Lengkap</FormLabel>
+                                            <FormLabel>Full Name</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Nama Lengkap" {...field} />
+                                                <Input placeholder="Patient Name" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -120,11 +120,11 @@ export default function PatientExaminationForm() {
                                     name="age"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>age</FormLabel>
+                                            <FormLabel>Age</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
-                                                    placeholder="age"
+                                                    placeholder="25"
                                                     {...field}
                                                     onChange={(e) => field.onChange(+e.target.value)}
                                                 />
@@ -138,11 +138,11 @@ export default function PatientExaminationForm() {
                                     name="height"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Tinggi Badan</FormLabel>
+                                            <FormLabel>Height (cm)</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
-                                                    placeholder="Tinggi Badan"
+                                                    placeholder="170"
                                                     {...field}
                                                     onChange={(e) => field.onChange(+e.target.value)}
                                                 />
@@ -156,11 +156,11 @@ export default function PatientExaminationForm() {
                                     name="weight"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Berat Badan</FormLabel>
+                                            <FormLabel>Weight (kg)</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="number"
-                                                    placeholder="Berat Badan"
+                                                    placeholder="70"
                                                     {...field}
                                                     onChange={(e) => field.onChange(+e.target.value)}
                                                 />

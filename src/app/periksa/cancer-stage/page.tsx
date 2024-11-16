@@ -173,7 +173,7 @@ export default function CancerStageCheck() {
         return (
             <Card className="">
                 <CardHeader>
-                    <CardTitle>Cancer Presence Result</CardTitle>
+                    <CardTitle>Cancer Stage Result</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div

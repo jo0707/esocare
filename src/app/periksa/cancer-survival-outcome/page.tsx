@@ -150,7 +150,7 @@ export default function CancerSurvivalOutcomeCheck() {
         <div className="w-full p-4">
             <Card className="border-0 shadow-none">
                 <CardHeader>
-                    <CardTitle className="text-xl font-semibold">Cancer Survival Check</CardTitle>
+                    <CardTitle className="text-xl font-semibold">Cancer Survival Outcome Check</CardTitle>
                 </CardHeader>
                 <CardContent className="flex gap-16">
                     <div className="basis-1/2">

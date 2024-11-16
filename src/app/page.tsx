@@ -27,10 +27,10 @@ export default function LoginPage() {
 
     return (
         <div
-            className="min-h-screen flex items-center justify-center bg-gray-100"
+            className="min-h-screen flex items-center justify-center bg-[#F1F3FF]"
             style={{ fontFamily: "Poppins, sans-serif" }}
         >
-            <Card className="w-full max-w-md">
+            <Card className="w-full max-w-md border-none shadow-xl">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl text-center text-violet-500">
                         <h1>
