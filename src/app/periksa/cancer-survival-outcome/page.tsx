@@ -120,7 +120,7 @@ export default function CancerSurvivalOutcomeCheck() {
         return (
             <Card className="">
                 <CardHeader>
-                    <CardTitle>Cancer Presence Result</CardTitle>
+                    <CardTitle>Cancer Survival Outcome Result</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div

@@ -49,8 +49,8 @@ const PatientList: React.FC = () => {
                             Menampilkan {filteredPatients.length} dari {patients.length} pasien
                         </p>
                     </div>
-                    <div className="space-y-2">
-                        {filteredPatients.map((patient, index) => (
+                    <div className="space-y-2 max-h-screen overflow-auto">
+                        {filteredPatients.toReversed().map((patient, index) => (
                             <button
                                 key={index}
                                 className="text-start w-full p-2 border-b-2 border-b-gray-300 hover:bg-gray-100 transition"

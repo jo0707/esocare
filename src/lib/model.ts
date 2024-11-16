@@ -26,8 +26,9 @@ export async function predictSurvival(scaledSurvival: SurvivalScaled): Promise<S
     const results = await session.run({
         float_input: new ort.Tensor(new Float32Array(Object.values(scaledSurvival)), [1, 8]),
     })
+    console.log(Object.values(scaledSurvival))
     console.log(results)
-    const result = results.probabilities.data[1] as number
+    const result = results.probabilities.data[0] as number
 
     return { ...scaledSurvival, result }
 }

@@ -27,7 +27,7 @@ export default function Header({}: Props) {
                             <AvatarFallback>AS</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col text-start">
-                            <span>Dr. Apridian Saputra</span>
+                            <span>dr. Apridian Saputra</span>
                             <span className="text-gray-500 text-xs">Dokter Umum</span>
                         </div>
                         <ChevronDown className="h-4 w-4" />

@@ -10,21 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import PatientDataSteps from "@/components/patientDataSteps"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-    normalizePresenceData,
-    normalizeRecurrenceData,
-    normalizeStageData,
-    normalizeSurvivalData,
-    normalizeTreatmentData,
-} from "@/lib/normalization"
-import {
-    predictPresence,
-    predictRecurrence,
-    predictStage,
-    predictSurvival,
-    predictTreatmentResponse,
-} from "@/lib/model"
-import { Stage, StageScaledResult, stages } from "@/model/Stage"
+import { normalizeRecurrenceData, normalizeTreatmentData } from "@/lib/normalization"
+import { predictRecurrence, predictTreatmentResponse } from "@/lib/model"
+import { stages } from "@/model/Stage"
 import {
     getPresenceResult,
     getRecurrenceResult,
@@ -33,8 +21,6 @@ import {
     getSurvivalResult,
     savePatientResult,
     saveRecurrenceResult,
-    saveStageResult,
-    saveSurvivalResult,
     saveTreatmentResult,
 } from "@/lib/store"
 import PredictionResultDialog from "@/components/predictionResult"
@@ -49,6 +35,13 @@ const primaryPathologyResidualTumorOptions = [
     { label: "R1", value: "1" },
     { label: "R2", value: "2" },
     { label: "RX", value: "3" },
+]
+
+const treatmentResponseDetails = [
+    "Low risk of recurrence",
+    "Moderate risk of recurrence",
+    "High risk of recurrence.",
+    "Unknown risk of recurrence.",
 ]
 
 const formSchema = z.object({
@@ -184,7 +177,7 @@ export default function CancerRecurrenceOutcomeCheck() {
                     </div>
                     <div className={`p-4 rounded-md mb-4 border`}>
                         <p className={`font-semibold`}>
-                            Treatment Response: {primaryPathologyResidualTumorOptions[treatmentIndex].label}
+                            After treatment response: {treatmentResponseDetails[treatmentIndex]}
                         </p>
                         <p>Confidence Score: {treatmentConfidence}%</p>
                     </div>

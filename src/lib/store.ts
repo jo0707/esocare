@@ -97,9 +97,51 @@ export function getTreatmentResult(): TreatmentResult | null {
 }
 
 export function getPatientResults(): Patient[] {
+    // const dummy: Patient[] = [
+    //     {
+    //         name: "Alfajar",
+    //         age: 30,
+    //         gender: "1",
+    //         bmi: 26.122448979591837,
+    //         presence: 0.8099995255470276,
+    //         stageIndex: 4,
+    //         stage: "Stage IIA",
+    //         survival: 1,
+    //         recurrence: 0.2200000286102295,
+    //         treatmentResponseIndex: 0,
+    //         treatmentResponse: "R0",
+    //     },
+    //     {
+    //         name: "Freddy Harahap",
+    //         age: 50,
+    //         gender: "1",
+    //         bmi: 39.06249999999999,
+    //         presence: 0.5599997639656067,
+    //         stageIndex: 6,
+    //         stage: "Stage III",
+    //         survival: 0.570000171661377,
+    //         recurrence: 0.4499998390674591,
+    //         treatmentResponseIndex: 0,
+    //         treatmentResponse: "R0",
+    //     },
+    //     {
+    //         name: "Joshua Sinaga",
+    //         age: 80,
+    //         gender: "1",
+    //         bmi: 31.14186851211073,
+    //         presence: 0.969999372959137,
+    //         stageIndex: 8,
+    //         stage: "Stage IIIB",
+    //         survival: 0.8500000238418579,
+    //         recurrence: 0.09999998658895493,
+    //         treatmentResponseIndex: 3,
+    //         treatmentResponse: "RX",
+    //     },
+    // ]
+
     if (typeof localStorage !== "undefined") {
         const patientResults = localStorage.getItem("patientResults")
-        if (patientResults) {
+        if (patientResults != null) {
             return JSON.parse(patientResults)
         }
     }
