@@ -77,7 +77,7 @@ export default function CancerRecurrenceOutcomeCheck() {
         },
     })
 
-    function savePatientData(treatmentResult: TreatmentResult, recurrenceResult: RecurrenceResult): Patient {
+    function getPatientResult(treatmentResult: TreatmentResult, recurrenceResult: RecurrenceResult): Patient {
         const stageIndex = curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0
         const treatmentIndex = treatmentResult.result.indexOf(Math.max(...treatmentResult.result))
         const patientData: Patient = {
@@ -94,7 +94,6 @@ export default function CancerRecurrenceOutcomeCheck() {
             treatmentResponse: primaryPathologyResidualTumorOptions[treatmentIndex]?.label || "",
         }
 
-        savePatientResult(patientData)
         return patientData
     }
 
@@ -148,13 +147,14 @@ export default function CancerRecurrenceOutcomeCheck() {
         setRecur(recurrenceResult.result >= 0.5)
         setConfidence(Math.round(recurrenceScaledResult.result * 100))
 
-        setPatient(savePatientData(treatmentResult, recurrenceResult))
+        setPatient(getPatientResult(treatmentResult, recurrenceResult))
 
         setShowResult(true)
         setLoading(false)
     }
 
     function save() {
+        savePatientResult(patient)
         router.push("/dashboard")
     }
 
