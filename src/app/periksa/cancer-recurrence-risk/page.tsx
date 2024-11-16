@@ -88,17 +88,17 @@ export default function CancerRecurrenceOutcomeCheck() {
         const stageIndex = curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0
         const treatmentIndex = treatmentResult.result.indexOf(Math.max(...treatmentResult.result))
         const patientData: Patient = {
-            name: curRegistration?.name as string,
-            age: curRegistration?.age as number,
-            gender: curRegistration?.gender as string,
-            bmi: curPresence?.bmi as number,
-            presence: curPresence?.result as number,
+            name: curRegistration?.name || "",
+            age: curRegistration?.age || 0,
+            gender: curRegistration?.gender || "0",
+            bmi: curPresence?.bmi || 0,
+            presence: curPresence?.result || 0,
             stageIndex: stageIndex,
             stage: stages[stageIndex],
-            survival: curSurvival?.result as number,
-            recurrence: recurrenceResult.result,
+            survival: curSurvival?.result || 0,
+            recurrence: recurrenceResult.result || 0,
             treatmentResponseIndex: treatmentIndex,
-            treatmentResponse: primaryPathologyResidualTumorOptions[treatmentIndex].label,
+            treatmentResponse: primaryPathologyResidualTumorOptions[treatmentIndex]?.label || "",
         }
 
         savePatientResult(patientData)

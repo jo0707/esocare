@@ -1,3 +1,5 @@
+"use client"
+
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import { ChevronDown } from "lucide-react"

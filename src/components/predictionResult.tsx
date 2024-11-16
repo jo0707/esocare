@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
-export default function PredictionResultDialog ({
+export default function PredictionResultDialog({
     open = true,
     onOpenChange,
     data,
@@ -16,6 +16,8 @@ export default function PredictionResultDialog ({
     onOpenChange?: (open: boolean) => void
     data: Patient
 }) {
+    if (!data) return null
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">

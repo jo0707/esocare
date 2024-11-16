@@ -1,4 +1,6 @@
-import React, { useState } from "react"
+"use client"
+
+import React, { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
@@ -8,9 +10,14 @@ import PredictionResultDialog from "./predictionResult"
 const PatientList: React.FC = () => {
     const [open, setOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
-    const patients = getPatientResults()
+    const [patients, setPatients] = useState(getPatientResults())
     const [filteredPatients, setFilteredPatients] = useState(patients)
     const [predictionData, setPredictionData] = useState(patients[0])
+
+    useEffect(() => {
+        setPatients(getPatientResults())
+        setFilteredPatients(getPatientResults)
+    }, [])
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value)

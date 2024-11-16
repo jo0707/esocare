@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import PatientDataSteps from "@/components/patientDataSteps"
 import { getRegistration, saveRegistration } from "@/lib/store"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -32,27 +33,18 @@ const formSchema = z.object({
     }),
 })
 
-const patientData = [
-    { name: "Keti Azura Siregar", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Shintya Ayu Warung", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Irma Amelia Novianto", gender: "Perempuan", age: 22, stage: 4 },
-    { name: "Ikhsanudin Lari Pagi", gender: "Perempuan", age: 22, stage: 4 },
-]
-
 export default function PatientExaminationForm() {
-    const [patients, setPatients] = useState(patientData)
-    const [searchTerm, setSearchTerm] = useState("")
-
     const current = getRegistration()
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: current?.name || "",
-            gender: (current?.gender || "1") as "1" | "0" | undefined,
-            age: current?.age || 0,
-            height: current?.height || 0,
-            weight: current?.weight || 0,
+            name: current?.name ?? "",
+            gender: (current?.gender ?? "1") as "1" | "0" | undefined,
+            age: current?.age ?? 0,
+            height: current?.height ?? 0,
+            weight: current?.weight ?? 0,
         },
     })
 
@@ -66,15 +58,7 @@ export default function PatientExaminationForm() {
             weight: values.weight,
         }
         saveRegistration(newPatient)
-        window.location.href = "/periksa/cancer-presence"
-    }
-
-    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value)
-        const filtered = patientData.filter((patient) =>
-            patient.name.toLowerCase().includes(event.target.value.toLowerCase())
-        )
-        setPatients(filtered)
+        router.push("/periksa/cancer-presence")
     }
 
     return (

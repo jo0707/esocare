@@ -10,10 +10,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import PatientList from "@/components/patientList"
 import Header from "@/components/header"
 import { getPatientResults } from "@/lib/store"
+import { useRouter } from "next/navigation"
 
 export default function Dashboard() {
+    const router = useRouter()
     const handleAddPatient = () => {
-        window.location.href = "/periksa/register"
+        router.push("/periksa/register")
     }
 
     return (
