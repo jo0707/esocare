@@ -43,7 +43,7 @@ export default function LoginPage() {
                     <form className="space-y-4" onSubmit={validateLogin}>
                         <div className="space-y-2">
                             <Label htmlFor="username">Username</Label>
-                            <Input id="username" name="username" placeholder="Enter your username" required />
+                            <Input id="username" name="username" placeholder="dokter" required />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>
@@ -52,7 +52,7 @@ export default function LoginPage() {
                                     id="password"
                                     name="password"
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Enter your password"
+                                    placeholder="dokter"
                                     required
                                 />
                                 <button
