@@ -27,7 +27,7 @@ export async function predictSurvival(scaledSurvival: SurvivalScaled): Promise<S
         float_input: new ort.Tensor(new Float32Array(Object.values(scaledSurvival)), [1, 8]),
     })
     console.log(results)
-    const result = results.probabilities.data[0] as number
+    const result = results.probabilities.data[1] as number
 
     return { ...scaledSurvival, result }
 }
@@ -38,7 +38,7 @@ export async function predictRecurrence(scaledRecurrence: RecurrenceScaled): Pro
         float_input: new ort.Tensor(new Float32Array(Object.values(scaledRecurrence)), [1, 8]),
     })
     console.log(results)
-    const result = results.probabilities.data[0] as number
+    const result = results.probabilities.data[1] as number
     return { ...scaledRecurrence, result }
 }
 

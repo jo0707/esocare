@@ -131,7 +131,7 @@ export default function CancerSurvivalOutcomeCheck() {
                         <p className={`font-semibold ${vital ? "text-green-500" : "text-red-500"}`}>
                             Patient Survival Likeliness: {vital ? "High" : "Low"}
                         </p>
-                        <p>Confidence Score: {confidence}%</p>
+                        <p>Confidence Score: {confidence >= 50 ? confidence : 100 - confidence}%</p>
                     </div>
                     <div className="flex justify-between">
                         <Button variant="outline" onClick={() => setShowResult(false)}>

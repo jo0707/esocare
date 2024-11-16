@@ -3,24 +3,14 @@ import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import { getPatientResults } from "@/lib/store"
+import PredictionResultDialog from "./predictionResult"
 
-interface Patient {
-    name: string
-    gender: string
-    age: number
-    stage: number
-}
-
-interface PatientListProps {
-    patients: Patient[]
-    totalPatients: number
-    onAddPatient: (newPatient: Patient) => void
-}
-
-const PatientList: React.FC<PatientListProps> = () => {
+const PatientList: React.FC = () => {
+    const [open, setOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
     const patients = getPatientResults()
     const [filteredPatients, setFilteredPatients] = useState(patients)
+    const [predictionData, setPredictionData] = useState(patients[0])
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value)
@@ -42,27 +32,39 @@ const PatientList: React.FC<PatientListProps> = () => {
                         placeholder="Cari Pasien"
                         value={searchTerm}
                         onChange={handleSearch}
-                        className="w-full"
+                        className="w-full rounded-full"
                     />
-                    <div className="flex space-x-2">
-                        <Button variant="secondary" size="sm">
+                    <div className="flex flex-col space-y-2">
+                        <Button variant="secondary" size="sm" className="w-fit">
                             Semua
                         </Button>
+                        <p className="text-sm">
+                            Menampilkan {filteredPatients.length} dari {patients.length} pasien
+                        </p>
                     </div>
                     <div className="space-y-2">
                         {filteredPatients.map((patient, index) => (
-                            <Card key={index} className="shadow-sm">
-                                <CardContent className="p-3">
-                                    <p className="font-semibold">{patient.name}</p>
-                                    <p className="text-sm text-gray-600">
-                                        {patient.gender} {patient.age} Tahun Stadium {patient.stage}
-                                    </p>
-                                </CardContent>
-                            </Card>
+                            <button
+                                key={index}
+                                className="text-start w-full p-2 border-b-2 border-b-gray-300 hover:bg-gray-100 transition"
+                                onClick={() => {
+                                    setPredictionData(patient)
+                                    setOpen(true)
+                                }}
+                            >
+                                <p className="font-semibold capitalize ">{patient.name}</p>
+                                <div className="text-gray-600 text-sm flex flex-wrap gap-4">
+                                    <p>{patient.gender == "0" ? "Laki-Laki" : "Perempuan"}</p>
+                                    <p>{patient.age} Tahun</p>
+                                    <p>{patient.stage}</p>
+                                </div>
+                            </button>
                         ))}
                     </div>
                 </div>
             </CardContent>
+
+            <PredictionResultDialog open={open} onOpenChange={setOpen} data={predictionData} />
         </Card>
     )
 }

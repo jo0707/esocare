@@ -37,6 +37,7 @@ import {
     saveSurvivalResult,
     saveTreatmentResult,
 } from "@/lib/store"
+import PredictionResultDialog from "@/components/predictionResult"
 
 const primaryPathologyPostoperativeRxTxOptions = {
     NO: "0",
@@ -58,12 +59,14 @@ const formSchema = z.object({
 })
 
 export default function CancerRecurrenceOutcomeCheck() {
+    const [open, setOpen] = useState(true)
     const [showResult, setShowResult] = useState(false)
     const [confidence, setConfidence] = useState(0)
     const [treatmentConfidence, setTreatmentConfidence] = useState(0)
     const [recur, setRecur] = useState(true)
     const [treatmentIndex, setTreatmentIndex] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [patient, setPatient] = useState<Patient | null>(null)
     const router = useRouter()
 
     if (!getSurvivalResult()) return router.push("/periksa/cancer-survival-outcome")
@@ -81,7 +84,7 @@ export default function CancerRecurrenceOutcomeCheck() {
         },
     })
 
-    async function savePatientData(treatmentResult: TreatmentResult, recurrenceResult: RecurrenceResult) {
+    function savePatientData(treatmentResult: TreatmentResult, recurrenceResult: RecurrenceResult): Patient {
         const stageIndex = curStage?.result.indexOf(Math.max(...curStage?.result)) ?? 0
         const treatmentIndex = treatmentResult.result.indexOf(Math.max(...treatmentResult.result))
         const patientData: Patient = {
@@ -99,6 +102,7 @@ export default function CancerRecurrenceOutcomeCheck() {
         }
 
         savePatientResult(patientData)
+        return patientData
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -151,7 +155,7 @@ export default function CancerRecurrenceOutcomeCheck() {
         setRecur(recurrenceResult.result >= 0.5)
         setConfidence(Math.round(recurrenceScaledResult.result * 100))
 
-        savePatientData(treatmentResult, recurrenceResult)
+        setPatient(savePatientData(treatmentResult, recurrenceResult))
 
         setShowResult(true)
         setLoading(false)
@@ -176,7 +180,7 @@ export default function CancerRecurrenceOutcomeCheck() {
                         <p className={`font-semibold ${recur ? "text-red-500" : "text-green-500"}`}>
                             Recurrence Risk: {recur ? "High" : "Low"}
                         </p>
-                        <p>Confidence Score: {confidence}%</p>
+                        <p>Confidence Score: {confidence >= 50 ? confidence : 100 - confidence}%</p>
                     </div>
                     <div className={`p-4 rounded-md mb-4 border`}>
                         <p className={`font-semibold`}>
@@ -191,6 +195,8 @@ export default function CancerRecurrenceOutcomeCheck() {
                         <Button onClick={save}>Save Patient Result</Button>
                     </div>
                 </CardContent>
+
+                {patient && <PredictionResultDialog open={open} onOpenChange={setOpen} data={patient} />}
             </Card>
         )
     }

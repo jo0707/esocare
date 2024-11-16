@@ -20,12 +20,13 @@ sample_data = [
     [1, 0, 1, 1, 0, 0.9, 0.4],  # Example 12
     [0, 0, 0, 1, 1, 0.2, 0.7],  # Example 13
     [1, 1, 0, 1, 0, 0.5, 0.3],  # Example 14
-    [0, 1, 1, 0, 1, 0.8, 0.9]   # Example 15
+    [0, 1, 1, 0, 1, 0.8, 0.9],   # Example 15
+    [1, 0, 0, 0, 0, 0.4, 0.34]   # Example 16
 ]
 
 
 # Expected outputs (0: Cancer not present, 1: Cancer present)
-expected_outputs = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]  
+expected_outputs = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0]  
 
 # Convert to NumPy array
 input_data = np.array(sample_data, dtype=np.float32)
