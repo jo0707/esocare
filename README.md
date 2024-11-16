@@ -2,15 +2,15 @@
 
 ## Overview
 
-The Esophageal Cancer Prediction App is a web application designed to predict the likelihood of esophageal cancer in patients using machine learning algorithms. This app leverages patient data and various medical parameters to provide accurate predictions, aiding healthcare professionals in early diagnosis and treatment planning.
+EsoCare is a web application designed to assist doctors and healthcare professionals in predicting various aspects of esophageal cancer in patients using machine learning (ML) and artificial intelligence (AI) models. The application provides predictions for cancer presence, cancer stage, survival outcome, recurrence risk, and treatment response.
 
 ## Features
 
--   **Patient Registration**: Register new patients with essential details such as name, age, gender, height, weight, and medical history.
--   **Cancer Presence Prediction**: Predict the presence of esophageal cancer based on patient data.
--   **Cancer Recurrence Risk**: Assess the risk of cancer recurrence in patients who have undergone treatment.
--   **Survival Outcome Prediction**: Predict the survival outcome of patients based on various medical parameters.
--   **Treatment Response Analysis**: Analyze the response of patients to different treatments.
+-   **Cancer Presence Prediction**: Determine the likelihood of esophageal cancer presence in a patient.
+-   **Cancer Stage Prediction**: Predict the stage of esophageal cancer based on patient data.
+-   **Survival Outcome Prediction**: Estimate the survival outcome of a patient with esophageal cancer.
+-   **Recurrence Risk Prediction**: Assess the risk of cancer recurrence in patients who have undergone treatment.
+-   **Treatment Response Analysis**: Analyze how a patient is likely to respond to different treatments.
 
 ## Technologies Used
 
@@ -25,8 +25,8 @@ The Esophageal Cancer Prediction App is a web application designed to predict th
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/esophageal-cancer-prediction-app.git
-    cd esophageal-cancer-prediction-app
+    git clone https://github.com/jo0707/esocare.git
+    cd esocare
     ```
 
 2. **Install dependencies**:
@@ -35,24 +35,16 @@ The Esophageal Cancer Prediction App is a web application designed to predict th
     npm install
     ```
 
-3. **Set up environment variables**:
-   Create a `.env` file in the root directory and add the necessary environment variables:
-
-    ```env
-    MONGODB_URI=your_mongodb_connection_string
-    NEXT_PUBLIC_API_URL=your_api_url
-    ```
-
-4. **Run the development server**:
+3. **Run the development server**:
 
     ```bash
-    npm run dev
+    bun run dev
     ```
 
-5. **Build for production**:
+4. **Build for production**:
     ```bash
-    npm run build
-    npm start
+    bun run build
+    bun start
     ```
 
 ## Usage
@@ -81,34 +73,6 @@ The Esophageal Cancer Prediction App is a web application designed to predict th
     - Navigate to the treatment response analysis page.
     - Enter the treatment details and analyze the response.
 
-## Contributing
-
-We welcome contributions to improve the Esophageal Cancer Prediction App. To contribute, please follow these steps:
-
-1. **Fork the repository**.
-2. **Create a new branch**:
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
-3. **Make your changes**.
-4. **Commit your changes**:
-    ```bash
-    git commit -m "Add your commit message"
-    ```
-5. **Push to the branch**:
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-6. **Create a pull request**.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgements
 
 We would like to thank all the contributors and the open-source community for their support and contributions to this project.
-
-## Contact
-
-For any questions or inquiries, please contact us at [your-email@example.com](mailto:your-email@example.com).
